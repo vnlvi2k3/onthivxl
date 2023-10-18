@@ -90,9 +90,9 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  int status = 0;
-  int count = 100;
-  setTimer1(10);
+//  int count = 100;
+  setTimer1(500);
+  setTimer2(5000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,27 +100,12 @@ int main(void)
   while (1)
   {
 	  if(timer1_flag == 1){
-		  setTimer1(10);
-		  if(count > 0){
-			  count --;
-		  }
-		  if(count <= 0){
-			  count = 100;
-			  switch(status){
-			  case 0:
-				  status = 1;
-				  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, RESET);
-				  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, SET);
-				  break;
-			  case 1:
-				  status = 0;
-				  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, SET);
-				  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, RESET);
-				  break;
-			  default:
-				  break;
-			  }
-		  }
+		  setTimer1(500);
+		  HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+	  }
+	  if(timer2_flag == 1){
+		  setTimer2(5000);
+		  HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 	  }
     /* USER CODE END WHILE */
 
