@@ -63,6 +63,22 @@ static void MX_TIM2_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
+uint16_t pins[8] = {LED1_Pin, LED2_Pin, LED3_Pin, LED4_Pin, LED5_Pin, LED6_Pin, LED7_Pin, LED8_Pin};
+
+void clearAllLeds(){
+	HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, SET);
+	HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, SET);
+	HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, SET);
+	HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, SET);
+	HAL_GPIO_WritePin(LED5_GPIO_Port, LED5_Pin, SET);
+	HAL_GPIO_WritePin(LED6_GPIO_Port, LED6_Pin, SET);
+	HAL_GPIO_WritePin(LED7_GPIO_Port, LED7_Pin, SET);
+	HAL_GPIO_WritePin(LED8_GPIO_Port, LED8_Pin, SET);
+}
+void ledOn(int idx){
+	clearAllLeds();
+	HAL_GPIO_WritePin(GPIOA, pins[idx], RESET);
+}
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -90,9 +106,8 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
-  int status = 0;
-  int count = 100;
-  setTimer1(10);
+  setTimer1(125);
+  int idx = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,26 +115,10 @@ int main(void)
   while (1)
   {
 	  if(timer1_flag == 1){
-		  setTimer1(10);
-		  if(count > 0){
-			  count --;
-		  }
-		  if(count <= 0){
-			  count = 100;
-			  switch(status){
-			  case 0:
-				  status = 1;
-				  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, RESET);
-				  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, SET);
-				  break;
-			  case 1:
-				  status = 0;
-				  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, SET);
-				  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, RESET);
-				  break;
-			  default:
-				  break;
-			  }
+		  setTimer1(125);
+		  ledOn(idx++);
+		  if(idx >= 8){
+			  idx = 0;
 		  }
 	  }
     /* USER CODE END WHILE */
@@ -222,10 +221,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED1_Pin|LED2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin
+                          |LED5_Pin|LED6_Pin|LED7_Pin|LED8_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED1_Pin LED2_Pin */
-  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin;
+  /*Configure GPIO pins : LED1_Pin LED2_Pin LED3_Pin LED4_Pin
+                           LED5_Pin LED6_Pin LED7_Pin LED8_Pin */
+  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin
+                          |LED5_Pin|LED6_Pin|LED7_Pin|LED8_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
