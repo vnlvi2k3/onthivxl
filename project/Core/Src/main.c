@@ -90,13 +90,13 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
+  int status = 0;
+  int count = 100;
+  setTimer1(10);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int status = 0;
-  int count = 100;
-  setTimer1(10);
   while (1)
   {
 	  if(timer1_flag == 1){
